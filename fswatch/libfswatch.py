@@ -2,9 +2,14 @@ import ctypes
 import ctypes.util
 
 
-dll = ctypes.util.find_library("libfswatch")
-lib = ctypes.CDLL(dll)
-
+if sys.platform == "linux":
+    lib = ctypes.CDLL("libfswatch.so")
+elif sys.platform == "darwin":
+    lib = ctypes.CDLL("libfswatch.dylib")
+elif sys.platform == "cygwin":
+    lib = ctypes.CDLL("cygfswatch-11.dll")
+else:
+    raise Exception("can't load fswatch library dynamically")
 
 fsw_init_library = lib.fsw_init_library
 
